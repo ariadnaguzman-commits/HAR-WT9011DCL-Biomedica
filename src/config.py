@@ -16,7 +16,7 @@ PACKET_HEADER = b"\x55\x61"
 PACKET_LEN = 20
 
 # Parámetros de adquisición y segmentación
-FS = 100                        # Frecuencia de muestreo (Hz)
+FS = 50                        # Frecuencia de muestreo (Hz)
 WINDOW_SECONDS = 2              # Duración de ventana (s)
 WINDOW_SIZE = FS * WINDOW_SECONDS  # 200 muestras
 OVERLAP = 0.5                   # 50% de traslape
