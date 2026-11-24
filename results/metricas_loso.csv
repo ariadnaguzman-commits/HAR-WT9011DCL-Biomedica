@@ -1,0 +1,4 @@
+modelo,esquema_validacion,accuracy,f1_macro,cohen_kappa
+Random_Forest,LOSO,0.9237,0.9227,0.8832
+SVM_RBF,LOSO,0.8844,0.8848,0.8224
+MLP,LOSO,0.8792,0.8818,0.815
