@@ -17,7 +17,7 @@ HAR-WT9011DCL-Biomedica/
 │   ├── figuras_articulo/     # Matriz de confusión LOSO y gráficas de resultados
 │   └── metricas_loso.csv     # Tabla comparativa de desempeño entre clasificadores
 ├── src/
-│   ├── config.py             # Constantes de adquisición (100 Hz), ventanas y rutas
+│   ├── config.py             # Constantes de adquisición (50 Hz), ventanas y rutas
 │   ├── sensor_ble.py         # Driver Bluetooth Low Energy (BLE) para WitMotion WT9011DCL
 │   ├── processing.py         # Carga de archivos, segmentación y extracción de 48 características
 │   └── train_evaluate.py     # Selección ANOVA + correlación, validación LOSO y exportación
