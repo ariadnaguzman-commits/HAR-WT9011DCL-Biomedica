@@ -1,6 +1,6 @@
 # Reconocimiento de actividad humana (HAR) con sensor inercial WT9011DCL
 
-Sistema de adquisición, procesamiento de señales inerciales y clasificación automática de actividades locomotoras humanas (caminar, brincar y subir escaleras), desarrollado para el Proyecto Integrativo II de Ingeniería Biomédica.
+Sistema de adquisición, procesamiento de señales inerciales y clasificación automática de actividades locomotoras humanas (caminar, brincar y subir escaleras), desarrollado para el Proyecto Integrativo III de la asignatura de Intrumentación Biomédica.
 
 ## 1. Estructura del repositorio
 
