@@ -1,7 +1,7 @@
 modelo,conjunto_features,esquema_validacion,accuracy,precision_macro,recall_macro,f1_macro,cohen_kappa
-SVM_RBF,48_todas,LOSO,0.9503,0.9487,0.9532,0.9508,0.9239
-Random_Forest,48_todas,LOSO,0.9458,0.9471,0.9469,0.947,0.9168
-MLP,48_todas,LOSO,0.9641,0.9639,0.9664,0.9651,0.945
-SVM_RBF,8_seleccionadas,LOSO,0.8892,0.8862,0.8859,0.8856,0.8297
-Random_Forest,8_seleccionadas,LOSO,0.8923,0.8868,0.8928,0.8895,0.8354
-MLP,8_seleccionadas,LOSO,0.8703,0.8678,0.8728,0.8699,0.8017
+SVM_RBF,48_todas,LOSO,0.9434,0.9421,0.9454,0.9437,0.9133
+Random_Forest,48_todas,LOSO,0.9331,0.9332,0.9379,0.9353,0.8977
+MLP,48_todas,LOSO,0.9647,0.9646,0.9665,0.9655,0.9459
+SVM_RBF,8_seleccionadas,LOSO,0.8671,0.8633,0.8664,0.8647,0.7962
+Random_Forest,8_seleccionadas,LOSO,0.8713,0.8667,0.8754,0.8703,0.8037
+MLP,8_seleccionadas,LOSO,0.8419,0.8409,0.8471,0.8433,0.7588

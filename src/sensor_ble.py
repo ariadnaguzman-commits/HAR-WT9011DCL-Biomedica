@@ -5,9 +5,9 @@ from bleak import BleakClient, BleakScanner
 from PyQt6.QtCore import QThread, pyqtSignal
 
 try:
-    from src.config import DEVICE_NAME_PREFIX, PACKET_HEADER, PACKET_LEN, UUID_DATOS
+    from src.config import DEVICE_NAME_PREFIX, FS, PACKET_HEADER, PACKET_LEN, UUID_DATOS
 except ImportError:
-    from config import DEVICE_NAME_PREFIX, PACKET_HEADER, PACKET_LEN, UUID_DATOS
+    from config import DEVICE_NAME_PREFIX, FS, PACKET_HEADER, PACKET_LEN, UUID_DATOS
 
 
 def decodificar_paquete_wt9011(paquete: bytes) -> tuple[float, float, float, float, float, float] | None:
@@ -129,7 +129,7 @@ class BLEStreamWorker(QThread):
                 return
 
             await client.start_notify(UUID_DATOS, notification_handler)
-            self.status_changed.emit(f"Conectado a {self.address} (100 Hz)", True)
+            self.status_changed.emit(f"Conectado a {self.address} ({FS} Hz)", True)
 
             while not self._stop_requested and client.is_connected:
                 await asyncio.sleep(0.05)

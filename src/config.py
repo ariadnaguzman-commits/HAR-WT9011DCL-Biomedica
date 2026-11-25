@@ -11,18 +11,22 @@ MODEL_PATH = MODELS_DIR / "har_pipeline.joblib"
 
 # Configuración BLE del sensor WitMotion WT9011DCL
 DEVICE_NAME_PREFIX = "WT9011DCL"
+DEFAULT_SENSOR_NAME = "WTSensor1"
+DEFAULT_SENSOR_ADDRESS = "FA:81:12:D8:44:D0"
 UUID_DATOS = "0000ffe4-0000-1000-8000-00805f9a34fb"
+UUID_COMANDO = "0000ffe9-0000-1000-8000-00805f9a34fb"
 PACKET_HEADER = b"\x55\x61"
 PACKET_LEN = 20
 
-# Parámetros de adquisición y segmentación
-FS = 100                        # Frecuencia de muestreo (Hz)
-WINDOW_SECONDS = 2              # Duración de ventana (s)
-WINDOW_SIZE = FS * WINDOW_SECONDS  # 200 muestras
-OVERLAP = 0.5                   # 50% de traslape
-STEP_SIZE = int(WINDOW_SIZE * (1 - OVERLAP))  # 100 muestras (1 s)
-DISCARD_INITIAL_SAMPLES = 100   # Descarte del primer segundo en tomas largas
+# Parámetros de adquisición y segmentación (50 Hz, ajustado al ancho de banda de 46 Hz)
+FS = 50                                          # Frecuencia de muestreo (Hz)
+WINDOW_SECONDS = 2                               # Duración de ventana (s)
+WINDOW_SIZE = FS * WINDOW_SECONDS                # 100 muestras (50 Hz * 2 s)
+OVERLAP = 0.5                                    # 50% de traslape
+STEP_SIZE = int(WINDOW_SIZE * (1 - OVERLAP))     # 50 muestras (1 s a 50 Hz)
+DISCARD_INITIAL_SECONDS = 1                      # Segundos descartados al inicio
+DISCARD_INITIAL_SAMPLES = FS * DISCARD_INITIAL_SECONDS  # 50 muestras (1 s a 50 Hz)
 
 # Columnas esperadas y clases de movimiento
 SENSOR_COLS = ["ax", "ay", "az", "gx", "gy", "gz"]
-CLASES = ["caminar", "brincar", "subir_escaleras"]
+CLASES = ["caminar", "brincar", "subir_escaleras"] 
