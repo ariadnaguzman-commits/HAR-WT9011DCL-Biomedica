@@ -228,6 +228,7 @@ def main() -> None:
 
     modelos = obtener_modelos()
     resultados_modelos = []
+    resultados_por_clase = []
     predicciones_por_modelo = {}
 
     print(f"\n2. Evaluando modelos ({esquema_eval}): 48 features vs. 8 features podadas...")
@@ -276,8 +277,32 @@ def main() -> None:
                 f"   - {nombre:<13} [{conjunto:<15}] | Acc: {acc:.4f} | Prec: {prec:.4f} | Rec: {rec:.4f} | F1: {f1_m:.4f}"
             )
 
+            prec_cls = precision_score(y_true_arr, y_pred_arr, labels=CLASES, average=None, zero_division=0)
+            rec_cls = recall_score(y_true_arr, y_pred_arr, labels=CLASES, average=None, zero_division=0)
+            f1_cls = f1_score(y_true_arr, y_pred_arr, labels=CLASES, average=None, zero_division=0)
+
+            for idx, clase in enumerate(CLASES):
+                soporte = int(np.sum(y_true_arr == clase))
+                resultados_por_clase.append(
+                    {
+                        "modelo": nombre,
+                        "conjunto_features": conjunto,
+                        "esquema_validacion": esquema_eval,
+                        "clase": clase,
+                        "soporte": soporte,
+                        "precision": round(float(prec_cls[idx]), 4),
+                        "recall": round(float(rec_cls[idx]), 4),
+                        "f1_score": round(float(f1_cls[idx]), 4),
+                    }
+                )
+
     df_resultados = pd.DataFrame(resultados_modelos)
     df_resultados.to_csv(RESULTS_DIR / "metricas_loso.csv", index=False)
+
+    df_por_clase = pd.DataFrame(resultados_por_clase)
+    df_por_clase.to_csv(RESULTS_DIR / "metricas_por_clase.csv", index=False)
+    print("\n   -> Métricas por clase guardadas en:", RESULTS_DIR / "metricas_por_clase.csv")
+    print(df_por_clase.to_string(index=False))
 
     df_podadas = df_resultados[df_resultados["conjunto_features"] == "8_seleccionadas"].sort_values(
         "f1_macro", ascending=False
