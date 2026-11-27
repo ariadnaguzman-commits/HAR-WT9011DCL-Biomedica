@@ -1,6 +1,8 @@
 # Reconocimiento de actividad humana (HAR) con sensor inercial WT9011DCL
 
-Sistema de adquisición, procesamiento de señales inerciales y clasificación automática de actividades locomotoras humanas (caminar, brincar y subir escaleras), desarrollado para el Proyecto Integrativo III de la asignatura de Intrumentación Biomédica.
+Sistema de adquisición, procesamiento de señales inerciales y clasificación automática de actividades locomotoras humanas (caminar, brincar y subir escaleras), desarrollado para el Proyecto Integrativo III de la asignatura de Instrumentación Biomédica.
+
+> **Nota sobre adquisición y módulos de interfaz:** para registrar tomas del protocolo experimental desde la terminal, sin interfaz gráfica, se utiliza `python src/acquisition.py`. El módulo `src/sensor_ble.py` define trabajadores basados en `QThread` y `pyqtSignal` (PyQt6), diseñados para ejecutarse dentro de una interfaz gráfica o un hilo de aplicación. Por lo tanto, no imprime la transmisión de datos en vivo cuando se ejecuta de manera independiente desde la consola.
 
 ## 1. Estructura del repositorio
 
@@ -15,7 +17,7 @@ HAR-WT9011DCL-Biomedica/
 │   └── har_pipeline.joblib          # Modelo entrenado, escalador y características seleccionadas.
 │
 ├── results/
-│   ├── figuras_articulo/            # Matriz de confusión LOSO y diagramas de caja.
+│   ├── figuras_articulo/            # Matrices de confusión LOSO y diagramas de caja.
 │   ├── metricas_loso.csv            # Desempeño global por modelo y conjunto de características.
 │   ├── metricas_por_clase.csv       # Precisión, recall y F1 por actividad.
 │   └── ranking_seleccion_caracteristicas.csv
@@ -23,21 +25,21 @@ HAR-WT9011DCL-Biomedica/
 │
 ├── src/
 │   ├── config.py                    # Configuración centralizada del proyecto.
-│   ├── acquisition.py               # Protocolo experimental de adquisición de datos.
-│   ├── sensor_ble.py                # Comunicación y lectura del sensor mediante BLE.
+│   ├── acquisition.py               # Protocolo experimental de adquisición por consola.
+│   ├── sensor_ble.py                # Trabajadores BLE con PyQt6.
 │   ├── processing.py                # Preprocesamiento y extracción de características.
 │   └── train_evaluate.py             # Entrenamiento, evaluación e inferencia de modelos.
 │
 └── requirements.txt                 # Dependencias de Python.
 ```
 
-### Descripción de los archivos principales
+### 1.1. Descripción de los archivos principales
 
 - **`src/config.py`:** centraliza las rutas del proyecto, la frecuencia de muestreo (50 Hz), el tamaño y traslape de las ventanas (2 s y 50 %), el descarte inicial (1 s), las clases y las constantes BLE del sensor WT9011DCL.
 
-- **`src/acquisition.py`:** implementa el protocolo experimental de 27 tomas por sujeto (tres repeticiones para cada una de las nueve variantes de las actividades caminar, brincar y subir escaleras) y guarda los archivos `.csv` en `data/raw/`.
+- **`src/acquisition.py`:** implementa el protocolo experimental de 27 tomas por sujeto (tres repeticiones para cada una de las nueve variantes de las actividades caminar, brincar y subir escaleras). La adquisición se realiza desde la consola mediante Bleak y asyncio, y los archivos `.csv` se guardan en `data/raw/`.
 
-- **`src/sensor_ble.py`:** decodifica los paquetes de 20 bytes (`0x55 0x61`) del sensor e implementa los trabajadores BLE (`BLEScannerWorker` y `BLEStreamWorker`) para establecer la conexión y realizar lecturas en tiempo real.
+- **`src/sensor_ble.py`:** decodifica los paquetes de 20 bytes (`0x55 0x61`) del sensor e implementa los trabajadores BLE `BLEScannerWorker` y `BLEStreamWorker`, basados en `QThread` de PyQt6, para realizar el escaneo y la lectura en tiempo real desde una interfaz gráfica o un hilo dedicado.
 
 - **`src/processing.py`:** lee archivos `.csv` o `.mat`, aplica ventaneo deslizante y calcula 48 características estadísticas en el dominio del tiempo (media, desviación estándar, mínimo, máximo, rango y RMS sobre los seis ejes y las magnitudes de aceleración y velocidad angular).
 
@@ -139,7 +141,7 @@ Un entorno virtual permite mantener aisladas las dependencias del proyecto, evit
    cd Desktop
    ```
 
-2. Clona el repositorio desde GitHub:
+2. Clona el repositorio desde GitHub. Verifica que la URL corresponda al repositorio de tu equipo:
 
    ```bash
    git clone https://github.com/ariadnaguzman-commits/HAR-WT9011DCL-Biomedica.git
@@ -199,7 +201,7 @@ Un entorno virtual permite mantener aisladas las dependencias del proyecto, evit
    pip install -r requirements.txt
    ```
 
-   Espera a que finalice la instalación de las bibliotecas necesarias, entre ellas NumPy, Pandas, Scikit-learn, SciPy, Matplotlib, Seaborn, Joblib y Bleak.
+   Espera a que finalice la instalación de las bibliotecas necesarias, entre ellas NumPy, Pandas, Scikit-learn, SciPy, Matplotlib, Seaborn, Joblib, Bleak y PyQt6.
 
 ### Paso 3. Encender y configurar el sensor WT9011DCL
 
@@ -310,8 +312,8 @@ El script ejecuta las siguientes operaciones:
 
 7. **Generación de figuras:** genera las visualizaciones correspondientes y las guarda en `results/figuras_articulo/`, incluyendo:
 
-   - `matriz_confusion_Random_Forest.png`
-   - `boxplots_top_caracteristicas.png`
+   - `matriz_confusion_<modelo>.png` (por ejemplo, `matriz_confusion_Random_Forest.png`).
+   - `boxplots_top_caracteristicas.png`.
 
 ### Paso 6. Realizar una predicción con un archivo de prueba
 
@@ -346,6 +348,7 @@ El proyecto se desarrolla en Python y utiliza las siguientes herramientas:
 | Seaborn | Visualización estadística. |
 | Joblib | Serialización y almacenamiento del modelo entrenado. |
 | Bleak | Comunicación Bluetooth Low Energy con el sensor WT9011DCL. |
+| PyQt6 / PyQtGraph | Hilos de trabajo (`QThread`) y componentes gráficos para interfaz y visualización. |
 | Git y GitHub | Control de versiones y alojamiento del repositorio. |
 
 ## 5. Resultados
