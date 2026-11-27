@@ -156,19 +156,22 @@ def guardar_figuras(
     y_true: np.ndarray,
     y_pred: np.ndarray,
     nombre_modelo: str,
+    matrices_modelos: dict[str, tuple[np.ndarray, np.ndarray]] | None = None,
 ) -> None:
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
-    # 1. Matriz de confusión del mejor modelo
-    cm = confusion_matrix(y_true, y_pred, labels=CLASES)
-    plt.figure(figsize=(6.5, 5.2))
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=CLASES, yticklabels=CLASES)
-    plt.title(f"Matriz de Confusión LOSO - {nombre_modelo}")
-    plt.xlabel("Actividad Predicha")
-    plt.ylabel("Actividad Real")
-    plt.tight_layout()
-    plt.savefig(FIGURES_DIR / f"matriz_confusion_{nombre_modelo}.png", dpi=300)
-    plt.close()
+    # 1. Matrices de confusión de todos los modelos evaluados (o del modelo principal)
+    a_graficar = matrices_modelos or {nombre_modelo: (y_true, y_pred)}
+    for mod_nombre, (yt, yp) in a_graficar.items():
+        cm = confusion_matrix(yt, yp, labels=CLASES)
+        plt.figure(figsize=(6.5, 5.2))
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=CLASES, yticklabels=CLASES)
+        plt.title(f"Matriz de Confusión LOSO - {mod_nombre}")
+        plt.xlabel("Actividad Predicha")
+        plt.ylabel("Actividad Real")
+        plt.tight_layout()
+        plt.savefig(FIGURES_DIR / f"matriz_confusion_{mod_nombre}.png", dpi=300)
+        plt.close()
 
     # 2. Boxplots de los 3 atributos más discriminantes (Sección II)
     feats_plot = top_features[:3]
@@ -312,7 +315,14 @@ def main() -> None:
 
     print(f"\n3. Entrenando modelo final ({mejor_modelo_nombre}) con 8 características...")
     cols_finales = seleccionar_caracteristicas(X_full, y, max_features=8)
-    guardar_figuras(dataset, cols_finales, y_true_best, y_pred_best, mejor_modelo_nombre)
+    guardar_figuras(
+        dataset,
+        cols_finales,
+        y_true_best,
+        y_pred_best,
+        mejor_modelo_nombre,
+        matrices_modelos=predicciones_por_modelo,
+    )
 
     scaler_final = StandardScaler()
     X_final_sc = scaler_final.fit_transform(X_full[cols_finales])
